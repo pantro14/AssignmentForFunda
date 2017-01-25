@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FundaAssignment</string>
+    <string name="title_activity_tasks_assignment">TasksAssignmentActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="tab1">Top10 Amsterdam</string>
+    <string name="tab2">Top10 Amsterdam (garden)</string>
 </resources>
