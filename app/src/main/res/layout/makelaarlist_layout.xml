@@ -18,12 +18,19 @@
         android:gravity="center_vertical"
         >
         <ProgressBar
-            style="@style/LinearProgress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:id="@+id/progressBar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:indeterminate="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/appbar_padding_top"
+            android:text="@string/progressBarMessage"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/itemsRecyclerView"
