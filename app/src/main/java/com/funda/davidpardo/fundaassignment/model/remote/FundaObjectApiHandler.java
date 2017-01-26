@@ -5,11 +5,6 @@ import android.os.AsyncTask;
 import com.funda.davidpardo.fundaassignment.util.Deserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -48,16 +43,24 @@ public class FundaObjectApiHandler extends AsyncTask<String, Void, String> {
                         new GsonBuilder()
                                 .registerTypeAdapter(FundaObject.class, new Deserializer())
                                 .create();
+                FundaObject fundaObject = gson.fromJson(responseString, FundaObject.class);
+                String name = fundaObject.getMakelaarName();
 
-                Type collectionType = new TypeToken<Collection<FundaObject>>(){}.getType();
-
-                List<FundaObject> lcs = (List<FundaObject>) new Gson()
-                        .fromJson(responseString, collectionType);
-
-                //Collection<FundaObject> objectCollection = gson.fromJson(responseString, collectionType);
-
-                /*FundaObject fundaObject = gson.fromJson(responseString, FundaObject.class);
+                /*Gson gson =
+                        new GsonBuilder()
+                                .registerTypeAdapter(FundaObject.class, new Deserializer())
+                                .create();
+                FundaObject fundaObject = gson.fromJson(responseString, FundaObject.class);
                 String name = fundaObject.getMakelaarName();*/
+
+
+                /*Gson gson =
+                        new GsonBuilder()
+                                .registerTypeAdapter(FundaObject.class, new Deserializer<FundaObject>())
+                                .create();
+
+                Type listType = new TypeToken<ArrayList<FundaObject>>(){}.getType();
+                List<FundaObject> yourClassList = gson.fromJson(responseString, listType);*/
             }
         } catch (Exception e) {
             e.printStackTrace();
