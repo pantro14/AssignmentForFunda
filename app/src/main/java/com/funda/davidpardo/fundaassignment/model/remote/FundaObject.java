@@ -8,14 +8,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class FundaObject {
 
-    @SerializedName("Id")
-    public String objectId;
-
     @SerializedName("MakelaarId")
     public String makelaarId;
 
     @SerializedName("MakelaarNaam")
     public String makelaarName;
+
+    public int quantity;
+
+    public FundaObject(String makelaarId, String makelaarName) {
+        this.makelaarId = makelaarId;
+        this.makelaarName = makelaarName;
+    }
 
     public String getMakelaarId() {
         return makelaarId;
@@ -33,11 +37,12 @@ public class FundaObject {
         this.makelaarName = makelaarName;
     }
 
-    public String getObjectId() {
-        return objectId;
+
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

@@ -2,9 +2,13 @@ package com.funda.davidpardo.fundaassignment.model.remote;
 
 import android.os.AsyncTask;
 
-import com.funda.davidpardo.fundaassignment.util.Deserializer;
+import com.funda.davidpardo.fundaassignment.util.CustomJsonDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,29 +42,12 @@ public class FundaObjectApiHandler extends AsyncTask<String, Void, String> {
         super.onPostExecute(responseString);
 
         try {
-            if (responseString != null && responseString.isEmpty() != true) {
-                Gson gson =
-                        new GsonBuilder()
-                                .registerTypeAdapter(FundaObject.class, new Deserializer())
-                                .create();
-                FundaObject fundaObject = gson.fromJson(responseString, FundaObject.class);
-                String name = fundaObject.getMakelaarName();
-
-                /*Gson gson =
-                        new GsonBuilder()
-                                .registerTypeAdapter(FundaObject.class, new Deserializer())
-                                .create();
-                FundaObject fundaObject = gson.fromJson(responseString, FundaObject.class);
-                String name = fundaObject.getMakelaarName();*/
-
-
-                /*Gson gson =
-                        new GsonBuilder()
-                                .registerTypeAdapter(FundaObject.class, new Deserializer<FundaObject>())
-                                .create();
-
-                Type listType = new TypeToken<ArrayList<FundaObject>>(){}.getType();
-                List<FundaObject> yourClassList = gson.fromJson(responseString, listType);*/
+            if (responseString != null && !responseString.isEmpty()) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(MakelaarCollection.class, new CustomJsonDeserializer())
+                        .create();
+                MakelaarCollection makelaarCollection = gson.fromJson(responseString, MakelaarCollection.class);
+                makelaarCollection.countMakelaarNumberObjects();
             }
         } catch (Exception e) {
             e.printStackTrace();
