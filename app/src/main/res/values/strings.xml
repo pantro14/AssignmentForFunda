@@ -5,5 +5,6 @@
 
     <string name="tab1">Top10 Amsterdam</string>
     <string name="tab2">Top10 Amsterdam (garden)</string>
-    <string name="progressBarMessage">Downloading house from server, status: </string>
+    <string name="progressBarMessage">Downloading house from server...</string>
+    <string name="maxPagination">25</string>
 </resources>

@@ -13,6 +13,7 @@
     android:gravity="center_vertical"
     tools:context="com.funda.davidpardo.fundaassignment.makelaarlist.MakelaarListFragment">
         <TextView
+            android:id="@+id/progressMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/appbar_padding_top"

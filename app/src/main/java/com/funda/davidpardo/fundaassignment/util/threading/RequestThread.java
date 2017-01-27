@@ -17,11 +17,14 @@ public class RequestThread implements Runnable {
     private int typeRequest;
     private OkHttpClient client = new OkHttpClient();
 
+    public RequestThread(String url){
+        this.url = url;
+    }
+
     public RequestThread(RequestCallback requestCallback, String url, int typeRequest){
         this.requestCallback = requestCallback;
         this.url = url;
         this.typeRequest = typeRequest;
-
     }
 
     @Override

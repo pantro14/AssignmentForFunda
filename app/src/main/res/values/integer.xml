@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="taskOne">1</integer>
+    <integer name="taskTwo">2</integer>
+    <integer name="threadMilliseconds">1600</integer>
+    <integer name="requestTypeToken">0</integer>
+    <integer name="requestTypeElements">1</integer>
+</resources>

@@ -29,9 +29,11 @@ import java.util.List;
 public class MakelaarListFragment extends Fragment implements RequestCallback, RequestAtributes{
 
     public int taskType;
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
     private RecyclerView itemsRecyclerView;
     private List<FundaObject> makelaarArray;
+
+    private final String TASK = "task";
 
 
     @Override
@@ -39,7 +41,7 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            taskType = bundle.getInt("task");
+            taskType = bundle.getInt(TASK);
         }
     }
 
@@ -50,11 +52,17 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         itemsRecyclerView = (RecyclerView) view.findViewById(R.id.itemsRecyclerView);
         makelaarArray = new ArrayList<>();
-        if(taskType==1){
+        /*
+         *  A request to the API is performed in order to know the total amount of Objects
+         *  that come the GET method retrieve for each task:
+         *  task1: Brokers from Amsterdam, get objects
+         *  task2: Brokers from Amsterdam, get objects with a garden
+         */
+        if(taskType==getResources().getInteger(R.integer.taskOne)){
             String url = urlBase+apiKey+typeParam+cityParam+actualPageParam+"1"+pageSizeParam+"0";
             Thread requestThreadOne = new Thread(new RequestThread(this, url, housesAmmountRequest));
             requestThreadOne.start();
-        }else if(taskType==2){
+        }else if(taskType==getResources().getInteger(R.integer.taskTwo)){
             String url = urlBase+apiKey+typeParam+cityParam+gardenParam+actualPageParam+"1"+pageSizeParam+"0";
             Thread requestThreadOne = new Thread(new RequestThread(this, url, housesAmmountRequest));
             requestThreadOne.start();
@@ -63,11 +71,20 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
         return view;
     }
 
+    /**
+     * Interface method to perform some instructions each time the request service is done
+     */
     @Override
     public void callbackThread(final String response, int requestType) {
-        if(requestType == 0){
+        /*
+         *  if the Thread request was made for knowing the amount of Objets then:
+         *  setExecuteRequestParameters is executed.
+         *  if the Thread request was made to ger the Object Elements, then:
+         *  Update Fragment UI
+         */
+        if(requestType == getResources().getInteger(R.integer.requestTypeToken)){
             setExecuteRequestParameters(response);
-        }else if(requestType == 1){
+        }else if(requestType == getResources().getInteger(R.integer.requestTypeElements)){
             if (getActivity() != null && !getActivity().isFinishing()){
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -79,7 +96,10 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
         }
     }
 
-    public void updateMakelaarListUI(String response){
+    /**
+     *  Method for updating the UI fragment components
+     */
+    private void updateMakelaarListUI(String response){
         if (response != null && !response.isEmpty()) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(MakelaarCollection.class, new CustomJsonDeserializer())
@@ -100,7 +120,12 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
         }
     }
 
-    public void setExecuteRequestParameters(String response){
+    /**
+     *  Method for counting the amount of objects, set the iterations in order to
+     *  request the API using FIFO threading, each 1600 milliseconds
+     *  in order to make less than 100 requests per minute.
+     */
+    private void setExecuteRequestParameters(String response){
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(response).getAsJsonObject();
         int totalObjects = obj.get(totalFundaObjects).getAsInt();
@@ -108,19 +133,16 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
         progressBar.setMax(iterations);
         for(int index=0; index<iterations; index++){
             try {
-                if(taskType==1){
-                    String url = urlBase+apiKey+typeParam+cityParam+actualPageParam+String.valueOf(index+1)+pageSizeParam+"25";
+                if(taskType==getResources().getInteger(R.integer.taskOne)){
+                    String url = urlBase+apiKey+typeParam+cityParam+actualPageParam+String.valueOf(index+1)+pageSizeParam+getResources().getString(R.string.maxPagination);
                     Thread requestThreadOne = new Thread(new RequestThread(this, url, housesListRequest));
                     requestThreadOne.start();
-                    System.out.println("Task type: "+taskType+", index:"+index);
-
-                }else if(taskType==2){
-                    String url = urlBase+apiKey+typeParam+cityParam+gardenParam+actualPageParam+String.valueOf(index+1)+pageSizeParam+"25";
+                }else if(taskType==getResources().getInteger(R.integer.taskTwo)){
+                    String url = urlBase+apiKey+typeParam+cityParam+gardenParam+actualPageParam+String.valueOf(index+1)+pageSizeParam+getResources().getString(R.string.maxPagination);
                     Thread requestThreadTwo = new Thread(new RequestThread(this, url, housesListRequest));
                     requestThreadTwo.start();
-                    System.out.println("Task type: "+taskType+", index:"+index);
                 }
-                Thread.sleep(1600);
+                Thread.sleep(getResources().getInteger(R.integer.threadMilliseconds));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
