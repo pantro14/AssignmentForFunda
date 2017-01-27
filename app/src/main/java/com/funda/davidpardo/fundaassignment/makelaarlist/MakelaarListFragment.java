@@ -108,7 +108,8 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
             List<FundaObject> makelaarArray =
                     makelaarCollection.countMakelaarNumberObjects();
             this.makelaarArray = makelaarCollection.countMakelaarGlobalObjects(this.makelaarArray, makelaarArray);
-            MakelaarAdapter itemsAdapter = new MakelaarAdapter(this.makelaarArray);
+            List<FundaObject> makelaarArrayTopTen = this.makelaarArray.subList(0,10);
+            MakelaarAdapter itemsAdapter = new MakelaarAdapter(makelaarArrayTopTen);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getBaseContext());
             itemsRecyclerView.setLayoutManager(layoutManager);
             itemsRecyclerView.setItemAnimator(new DefaultItemAnimator());
