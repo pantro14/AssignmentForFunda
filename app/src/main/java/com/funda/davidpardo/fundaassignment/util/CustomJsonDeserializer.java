@@ -21,9 +21,9 @@ public class CustomJsonDeserializer implements JsonDeserializer<MakelaarCollecti
 
     @Override
     public MakelaarCollection deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonElement content = json.getAsJsonObject().get("Objects");
         Type listType = new TypeToken<ArrayList<FundaObject>>(){}.getType();
         MakelaarCollection makelaarCollection = new MakelaarCollection();
+        JsonElement content = json.getAsJsonObject().get("Objects");
         makelaarCollection.setList((ArrayList<FundaObject>)new Gson().fromJson(content, listType));
         return makelaarCollection;
     }

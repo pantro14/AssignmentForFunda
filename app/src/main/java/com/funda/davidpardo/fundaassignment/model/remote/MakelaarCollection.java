@@ -17,15 +17,10 @@ import java.util.Map;
 
 public class MakelaarCollection {
 
-    private Map<String, String> makelaarSorted;
     private List<FundaObject> list;
 
     public MakelaarCollection() {
         super();
-    }
-
-    public MakelaarCollection(List<FundaObject> list) {
-        this.list = list;
     }
 
     public List<FundaObject> getList() {
@@ -36,7 +31,7 @@ public class MakelaarCollection {
         this.list = list;
     }
 
-    public ArrayList<FundaObject> countMakelaarNumberObjects() {
+    public List<FundaObject> countMakelaarNumberObjects() {
         Map<String, FundaObject> map = new HashMap<>();
         for (FundaObject fundaObject : list) {
             String key = fundaObject.getMakelaarId();
@@ -52,15 +47,42 @@ public class MakelaarCollection {
                         fundaObject.getMakelaarName(), fundaObject.getQuantity()));
             }
         }
-        ArrayList<FundaObject> makelaarArray = new ArrayList<>(map.values());
+        List<FundaObject> makelaarArray = new ArrayList<>(map.values());
+        sortListByAmmount(makelaarArray);
+        return makelaarArray;
+    }
+
+    public List<FundaObject> countMakelaarGlobalObjects
+            (List<FundaObject> globalList, List<FundaObject> nextList) {
+        List<FundaObject> list = new ArrayList<FundaObject>();
+        list.addAll(globalList);
+        list.addAll(nextList);
+
+        Map<String, FundaObject> map = new HashMap<>();
+        for (FundaObject fundaObject : list) {
+            String key = fundaObject.getMakelaarId();
+            if (map.get(key) == null) {
+                map.put(key, new FundaObject(fundaObject.getMakelaarId(),
+                        fundaObject.getMakelaarName(), fundaObject.getQuantity()));
+            }else{
+                FundaObject repeated = map.get(key);
+                repeated.setQuantity(repeated.getQuantity()+fundaObject.getQuantity());
+                map.put(key, repeated);
+            }
+        }
+        List<FundaObject> makelaarArray = new ArrayList<>(map.values());
+        sortListByAmmount(makelaarArray);
+        return makelaarArray;
+    }
+
+    private void sortListByAmmount(List<FundaObject> list){
         Ordering<FundaObject> byQuantity = new Ordering<FundaObject>() {
             @Override
             public int compare(FundaObject aFundaObject, FundaObject otherFundaObject) {
                 return Ints.compare(aFundaObject.getQuantity(), otherFundaObject.getQuantity());
             }
         };
-        Collections.sort(makelaarArray,
+        Collections.sort(list,
                 byQuantity.nullsFirst().reverse());
-        return makelaarArray;
     }
 }
