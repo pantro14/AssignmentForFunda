@@ -13,15 +13,10 @@ import android.widget.ProgressBar;
 import com.funda.davidpardo.fundaassignment.R;
 import com.funda.davidpardo.fundaassignment.model.remote.FundaObject;
 import com.funda.davidpardo.fundaassignment.model.remote.MakelaarCollection;
-import com.funda.davidpardo.fundaassignment.util.CustomJsonDeserializer;
 import com.funda.davidpardo.fundaassignment.util.threading.RequestAtributes;
 import com.funda.davidpardo.fundaassignment.util.threading.RequestCallback;
 import com.funda.davidpardo.fundaassignment.util.threading.RequestThread;
 import com.funda.davidpardo.fundaassignment.util.ui.DividerItemDecoration;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,66 +66,52 @@ public class MakelaarListFragment extends Fragment implements RequestCallback, R
         return view;
     }
 
+
     /**
      * Interface method to perform some instructions each time the request service is done
      */
     @Override
-    public void callbackThread(final String response, int requestType) {
-        /*
-         *  if the Thread request was made for knowing the amount of Objets then:
-         *  setExecuteRequestParameters is executed.
-         *  if the Thread request was made to ger the Object Elements, then:
-         *  Update Fragment UI
-         */
-        if(requestType == getResources().getInteger(R.integer.requestTypeToken)){
-            setExecuteRequestParameters(response);
-        }else if(requestType == getResources().getInteger(R.integer.requestTypeElements)){
-            if (getActivity() != null && !getActivity().isFinishing()){
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateMakelaarListUI(response);
-                    }
-                });
-            }
+    public void callbackTokenThread(int iterations) {
+        setExecuteRequestParameters(iterations);
+    }
+
+    /**
+     * Interface method to perform some instructions each time the request service is done
+     */
+    @Override
+    public void callbackRequestThread(final List<FundaObject> fundaObjectList) {
+        if (getActivity() != null && !getActivity().isFinishing()){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateMakelaarListUI(fundaObjectList);
+                }
+            });
         }
     }
 
     /**
      *  Method for updating the UI fragment components
      */
-    private void updateMakelaarListUI(String response){
-        if (response != null && !response.isEmpty()) {
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(MakelaarCollection.class, new CustomJsonDeserializer())
-                    .create();
-            MakelaarCollection makelaarCollection = gson.fromJson(response, MakelaarCollection.class);
-            List<FundaObject> makelaarArray =
-                    makelaarCollection.countMakelaarNumberObjects();
-            this.makelaarArray = makelaarCollection.countMakelaarGlobalObjects(this.makelaarArray, makelaarArray);
-            List<FundaObject> makelaarArrayTopTen = this.makelaarArray.subList(0,10);
-            MakelaarAdapter itemsAdapter = new MakelaarAdapter(makelaarArrayTopTen);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getBaseContext());
-            itemsRecyclerView.setLayoutManager(layoutManager);
-            itemsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            DividerItemDecoration mDividerItemDecoration =
-                    new DividerItemDecoration(itemsRecyclerView.getContext(),
-                            null);
-            itemsRecyclerView.addItemDecoration(mDividerItemDecoration);
-            itemsRecyclerView.setAdapter(itemsAdapter);
-        }
+    private void updateMakelaarListUI(List<FundaObject> makelaarArray) {
+        this.makelaarArray = MakelaarCollection.countMakelaarGlobalObjects(this.makelaarArray, makelaarArray);
+        List<FundaObject> makelaarArrayTopTen = this.makelaarArray.subList(0, 10);
+        MakelaarAdapter itemsAdapter = new MakelaarAdapter(makelaarArrayTopTen);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getBaseContext());
+        itemsRecyclerView.setLayoutManager(layoutManager);
+        itemsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        DividerItemDecoration mDividerItemDecoration =
+                new DividerItemDecoration(itemsRecyclerView.getContext(),
+                        null);
+        itemsRecyclerView.addItemDecoration(mDividerItemDecoration);
+        itemsRecyclerView.setAdapter(itemsAdapter);
     }
 
     /**
      *  Method for counting the amount of objects, set the iterations in order to
-     *  request the API using FIFO threading, each 1600 milliseconds
-     *  in order to make less than 100 requests per minute.
+     *  request the API using FIFO threading,
      */
-    private void setExecuteRequestParameters(String response){
-        JsonParser parser = new JsonParser();
-        JsonObject obj = parser.parse(response).getAsJsonObject();
-        int totalObjects = obj.get(totalFundaObjects).getAsInt();
-        int iterations = totalObjects / 25;
+    private void setExecuteRequestParameters(int iterations){
         progressBar.setMax(iterations);
         for(int index=0; index<iterations; index++){
             try {

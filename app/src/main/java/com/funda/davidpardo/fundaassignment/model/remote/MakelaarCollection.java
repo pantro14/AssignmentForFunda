@@ -31,6 +31,10 @@ public class MakelaarCollection {
         this.list = list;
     }
 
+    /**
+     *  Method for counting and merging the number of objects coming
+     *  from the request.
+     */
     public List<FundaObject> countMakelaarNumberObjects() {
         Map<String, FundaObject> map = new HashMap<>();
         for (FundaObject fundaObject : list) {
@@ -52,7 +56,11 @@ public class MakelaarCollection {
         return makelaarArray;
     }
 
-    public List<FundaObject> countMakelaarGlobalObjects
+    /**
+     *  Method for counting and merging the total collection of
+     *  objects from the all request.
+     */
+    public static List<FundaObject> countMakelaarGlobalObjects
             (List<FundaObject> globalList, List<FundaObject> nextList) {
         List<FundaObject> list = new ArrayList<FundaObject>();
         list.addAll(globalList);
@@ -75,7 +83,10 @@ public class MakelaarCollection {
         return makelaarArray;
     }
 
-    private void sortListByAmmount(List<FundaObject> list){
+    /**
+     *  Method for ascending sorting any list of type FundaObject
+     */
+    private static void sortListByAmmount(List<FundaObject> list){
         Ordering<FundaObject> byQuantity = new Ordering<FundaObject>() {
             @Override
             public int compare(FundaObject aFundaObject, FundaObject otherFundaObject) {

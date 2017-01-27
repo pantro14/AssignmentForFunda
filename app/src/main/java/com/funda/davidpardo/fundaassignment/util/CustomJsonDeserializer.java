@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 /**
  * Created by davidpardo on 1/26/17.
+ *
+ *  This class is specialized on implement the methods for a custom Json Deserializar
  */
 
 public class CustomJsonDeserializer implements JsonDeserializer<MakelaarCollection> {
