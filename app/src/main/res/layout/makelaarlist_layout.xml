@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.funda.davidpardo.fundaassignment.makelaarlist.MakelaarList">
+    tools:context="com.funda.davidpardo.fundaassignment.makelaarlist.MakelaarListFragment">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -17,14 +17,6 @@
         android:orientation="vertical"
         android:gravity="center_vertical"
         >
-        <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:id="@+id/progressBar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:indeterminate="false"/>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,12 +24,21 @@
             android:text="@string/progressBarMessage"
             />
 
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:id="@+id/progressBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/appbar_padding_top"
+            android:indeterminate="false"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/itemsRecyclerView"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/appbar_padding_top"
+            android:layout_marginTop="@dimen/tab_padding_bottom"
             android:scrollbars="vertical" />
 
     </LinearLayout>

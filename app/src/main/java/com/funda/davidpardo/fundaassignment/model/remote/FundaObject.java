@@ -16,9 +16,10 @@ public class FundaObject {
 
     public int quantity;
 
-    public FundaObject(String makelaarId, String makelaarName) {
+    public FundaObject(String makelaarId, String makelaarName, int quantity) {
         this.makelaarId = makelaarId;
         this.makelaarName = makelaarName;
+        this.quantity = quantity;
     }
 
     public String getMakelaarId() {

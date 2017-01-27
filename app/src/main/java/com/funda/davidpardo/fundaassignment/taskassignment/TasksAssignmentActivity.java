@@ -1,26 +1,16 @@
 package com.funda.davidpardo.fundaassignment.taskassignment;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
 
 import com.funda.davidpardo.fundaassignment.R;
-import com.funda.davidpardo.fundaassignment.makelaarlist.MakelaarList;
+import com.funda.davidpardo.fundaassignment.makelaarlist.MakelaarListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +34,20 @@ public class TasksAssignmentActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         viewPager = (ViewPager) findViewById(R.id.container);
-        sectionTaskAdapter.addFragment(new MakelaarList(), getResources().getString(R.string.tab1));
-        sectionTaskAdapter.addFragment(new MakelaarList(), getResources().getString(R.string.tab2));
+
+        MakelaarListFragment fragmentTaskOne = new MakelaarListFragment();
+        Bundle bundleOne = new Bundle();
+        bundleOne.putInt("task", 1);
+        fragmentTaskOne.setArguments(bundleOne);
+
+        MakelaarListFragment fragmentTaskTwo = new MakelaarListFragment();
+        Bundle bundleTwo = new Bundle();
+        bundleTwo.putInt("task", 2);
+        fragmentTaskTwo.setArguments(bundleTwo);
+
+
+        sectionTaskAdapter.addFragment(fragmentTaskOne, getResources().getString(R.string.tab1));
+        sectionTaskAdapter.addFragment(fragmentTaskTwo, getResources().getString(R.string.tab2));
         viewPager.setAdapter(sectionTaskAdapter);
 
         tabLayout.setupWithViewPager(viewPager);

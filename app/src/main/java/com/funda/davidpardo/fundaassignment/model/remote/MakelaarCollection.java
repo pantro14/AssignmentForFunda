@@ -1,5 +1,11 @@
 package com.funda.davidpardo.fundaassignment.model.remote;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,25 +36,31 @@ public class MakelaarCollection {
         this.list = list;
     }
 
-    public void countMakelaarNumberObjects() {
+    public ArrayList<FundaObject> countMakelaarNumberObjects() {
         Map<String, FundaObject> map = new HashMap<>();
-        for (FundaObject person : list) {
-            String key = person.getMakelaarId();
+        for (FundaObject fundaObject : list) {
+            String key = fundaObject.getMakelaarId();
             if (map.get(key) == null) {
-                int occurrences = Collections.frequency(list, person.getMakelaarName());
-                person.setQuantity(occurrences);
-                map.put(key, new FundaObject(person.getMakelaarId(), person.getMakelaarName()));
+                int occurrences = Collections.frequency(Lists.transform(list, new Function<FundaObject, String>() {
+                    @Override
+                    public String apply(FundaObject fundaObject) {
+                        return fundaObject.getMakelaarId();
+                    }
+                }), key);
+                fundaObject.setQuantity(occurrences);
+                map.put(key, new FundaObject(fundaObject.getMakelaarId(),
+                        fundaObject.getMakelaarName(), fundaObject.getQuantity()));
             }
         }
-    }
-
-    public int countNumberEqual(List<FundaObject> itemList, String makelaarName) {
-        int count = 0;
-        for (FundaObject i : itemList) {
-            if (i.equals(makelaarName)) {
-                count++;
+        ArrayList<FundaObject> makelaarArray = new ArrayList<>(map.values());
+        Ordering<FundaObject> byQuantity = new Ordering<FundaObject>() {
+            @Override
+            public int compare(FundaObject aFundaObject, FundaObject otherFundaObject) {
+                return Ints.compare(aFundaObject.getQuantity(), otherFundaObject.getQuantity());
             }
-        }
-        return count;
+        };
+        Collections.sort(makelaarArray,
+                byQuantity.nullsFirst().reverse());
+        return makelaarArray;
     }
 }
